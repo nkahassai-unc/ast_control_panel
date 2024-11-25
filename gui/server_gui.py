@@ -1,3 +1,5 @@
+# This file contains the GUI for connecting to the server control.
+
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QTextEdit
 
 class ServerControlWidget(QWidget):

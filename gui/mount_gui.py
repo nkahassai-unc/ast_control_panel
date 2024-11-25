@@ -1,3 +1,5 @@
+# This file contains the GUI for the mount control.
+
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QGridLayout, QComboBox, QHBoxLayout
 from PyQt5.QtCore import QTimer
 
@@ -16,17 +18,26 @@ class MountControlWidget(QWidget):
 
         # D-Pad for Movement
         dpad_layout = QGridLayout()
+
+        # Create buttons
         self.north_button = QPushButton("N")
         self.south_button = QPushButton("S")
         self.east_button = QPushButton("E")
         self.west_button = QPushButton("W")
         self.stop_button = QPushButton("Stop")
 
+        # Set square dimensions for buttons
+        button_size = 60
+        for button in [self.north_button, self.south_button, self.east_button, self.west_button, self.stop_button]:
+            button.setFixedSize(button_size, button_size)
+
+        # Add buttons to the grid layout
         dpad_layout.addWidget(self.north_button, 0, 1)
         dpad_layout.addWidget(self.south_button, 2, 1)
         dpad_layout.addWidget(self.east_button, 1, 2)
         dpad_layout.addWidget(self.west_button, 1, 0)
         dpad_layout.addWidget(self.stop_button, 1, 1)
+
         layout.addLayout(dpad_layout)
 
         # Connect Buttons

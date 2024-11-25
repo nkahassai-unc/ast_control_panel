@@ -1,3 +1,5 @@
+# Description: INDIGO client implementation in Python.
+
 import socket
 import json
 
@@ -24,12 +26,27 @@ class INDIGOClient:
             self.connection = None
 
     def get_property(self, property_name):
-        """Fetch the value of a property."""
-        request = {"action": "get", "property": property_name}
-        self._send_request(request)
-        response = self._receive_response()
-        return response["value"]
-
+        """Fetch the value of a property with error handling."""
+        try:
+            if not self.connection:
+                raise ConnectionError("Client is not connected to the INDIGO server.")
+            
+            # Prepare the request
+            request = {"action": "get", "property": property_name}
+            self._send_request(request)
+            
+            # Get the response
+            response = self._receive_response()
+            return response.get("value")
+        
+        except ConnectionError as ce:
+            print(f"Connection Error: {ce}")
+            return None  # Return a default value (e.g., None or a mock value)
+        
+        except Exception as e:
+            print(f"Error fetching property '{property_name}': {e}")
+            return None
+        
     def set_property(self, property_name, value):
         """Set the value of a property."""
         request = {"action": "set", "property": property_name, "value": value}

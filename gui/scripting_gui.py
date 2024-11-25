@@ -1,78 +1,42 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
+# This file contains the GUI for the Scripting module.
 
-class ScriptingAgent:
-    def __init__(self, client):
-        self.client = client
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QHBoxLayout
 
-    def list_scripts(self):
-        """Fetch a list of available scripts from the server."""
-        try:
-            response = self.client.get_property("ScriptingAgent.SCRIPTS")
-            return response if response else []
-        except Exception as e:
-            print(f"Error fetching scripts: {e}")
-            return []
-
-    def run_script(self, script_name):
-        """Send a command to the server to run a script."""
-        try:
-            self.client.set_property(f"ScriptingAgent.RUN.{script_name}", True)
-            print(f"Running {script_name}...")
-        except Exception as e:
-            print(f"Error running script {script_name}: {e}")
-
-    def stop_script(self, script_name):
-        """Send a command to the server to stop a script."""
-        try:
-            self.client.set_property(f"ScriptingAgent.STOP.{script_name}", True)
-            print(f"Stopping {script_name}...")
-        except Exception as e:
-            print(f"Error stopping script {script_name}: {e}")
-
-
-class ScriptingGUI(QWidget):
-    def __init__(self, client):
-        super().__init__()
+class ScriptingWidget(QWidget):
+    def __init__(self, scripting_agent):
+        super().__init__()  # Properly call the QWidget constructor
+        self.scripting_agent = scripting_agent
         self.setWindowTitle("Scripting Module")
-        self.setMinimumSize(400, 300)
 
-        self.scripting_agent = ScriptingAgent(client)
-
-        # Layout
+        # Layout setup
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
 
-        # Fetch scripts and build UI
+        # Add a title label
+        title_label = QLabel("Available Scripts")
+        self.layout.addWidget(title_label)
+
+        # Dynamically populate the UI with script controls
         self.scripts = self.scripting_agent.list_scripts()
         self.create_ui()
 
     def create_ui(self):
-        """Create the GUI for scripting management."""
+        """Create a UI for managing scripts."""
         for script in self.scripts:
-            # Horizontal layout for each script
             script_layout = QHBoxLayout()
 
             # Script name label
-            label = QLabel(script["name"])
-            script_layout.addWidget(label)
+            script_name_label = QLabel(script["name"])
+            script_layout.addWidget(script_name_label)
 
             # Run button
             run_button = QPushButton("Run")
-            run_button.clicked.connect(lambda _, s=script["name"]: self.run_script(s))
+            run_button.clicked.connect(lambda _, s=script["name"]: self.scripting_agent.run_script(s))
             script_layout.addWidget(run_button)
 
             # Stop button
             stop_button = QPushButton("Stop")
-            stop_button.clicked.connect(lambda _, s=script["name"]: self.stop_script(s))
+            stop_button.clicked.connect(lambda _, s=script["name"]: self.scripting_agent.stop_script(s))
             script_layout.addWidget(stop_button)
 
-            # Add script layout to main layout
             self.layout.addLayout(script_layout)
-
-    def run_script(self, script_name):
-        """Handle Run button click."""
-        self.scripting_agent.run_script(script_name)
-
-    def stop_script(self, script_name):
-        """Handle Stop button click."""
-        self.scripting_agent.stop_script(script_name)
