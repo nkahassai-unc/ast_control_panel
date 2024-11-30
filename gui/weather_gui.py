@@ -53,7 +53,7 @@ class WeatherWidget(QWidget):
     def __init__(self, api_key, latitude, longitude):
         super().__init__()
         self.setWindowTitle("Weather Monitor")
-        self.setMinimumSize(300, 200)
+        self.setMinimumSize(300, 100)
 
         # WeatherMonitor instance
         self.weather_monitor = WeatherMonitor(api_key, latitude, longitude, self.log_message)

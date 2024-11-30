@@ -7,6 +7,7 @@ class ServerControlWidget(QWidget):
         super().__init__()
         self.client = client
         self.setWindowTitle("Server Control")
+        self.setMinimumSize(300, 100)
 
         # Layout
         layout = QVBoxLayout()

@@ -12,6 +12,8 @@ class nSTEPControlWidget(QWidget):
         # Main Layout
         self.setWindowTitle("nSTEP Focuser Control")
         main_layout = QVBoxLayout()
+        self.setMinimumSize(300, 100)
+
 
         # Temperature Display
         self.temperature_label = QLabel("Temperature: -- °C")
